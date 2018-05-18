@@ -11,59 +11,62 @@ body=$(curl -s $url_wan | iconv -f $charset_from -t $charset_to | tr -d '\n')
 session_num=$(echo $body | grep -o 'sWebSessionnum value=[0-9]\+' | grep -o '[0-9]\+')
 session_id=$(echo $body | grep -o 'sWebSessionid value=[0-9-]\+' | grep -o '[0-9-]\+')
 
-wan_method=$(echo $body | grep -o 'value="[0-9]\+" name="method" [^>]\+checked' | grep -o '[0-9]\+')
-wan_gwaddr_4over6=$(echo $body | grep -o 'name="gwaddr_4over6"[^>]\+value="[^"]*' | grep -o 'value="[^"]*' | sed 's/value="//g')
-wan_ipaddr=$(echo $body | grep -o 'name="ipaddr"[^>]\+value="[^"]*' | grep -o 'value="[^"]*' | sed 's/value="//g')
-wan_netmask=$(echo $body | grep -o 'name="netmask".\+<\/select>' | grep -o ' selected>[^<]\+' | sed 's/ selected>//g')
-wan_defgw=$(echo $body | grep -o 'name="defgw"[^>]\+value="[^"]*' | grep -o 'value="[^"]*' | sed 's/value="//g')
-wan_dns0=$(echo $body | grep -o 'name="dns0"[^>]\+value="[^"]*' | grep -o 'value="[^"]*' | sed 's/value="//g')
-wan_dns1=$(echo $body | grep -o 'name="dns1"[^>]\+value="[^"]*' | grep -o 'value="[^"]*' | sed 's/value="//g')
-wan_defmac_use=$(echo $body | grep -o 'value="[0-9]\+" name="defmac_use" [^>]\+checked' | grep -o '[0-9]\+')
-wan_mtu=$(echo $body | grep -o 'name="mtu"[^>]\+value="[^"]*' | grep -o 'value="[^"]*' | sed 's/value="//g')
+declare -A config_wan
+config_wan=(
+    [method]=$(echo $body | grep -o 'value="[0-9]\+" name="method" [^>]\+checked' | grep -o '[0-9]\+')
+    [gwaddr_4over6]=$(echo $body | grep -o 'name="gwaddr_4over6"[^>]\+value="[^"]*' | grep -o 'value="[^"]*' | sed 's/value="//g')
+    [ipaddr]=$(echo $body | grep -o 'name="ipaddr"[^>]\+value="[^"]*' | grep -o 'value="[^"]*' | sed 's/value="//g')
+    [netmask]=$(echo $body | grep -o 'name="netmask".\+<\/select>' | grep -o ' selected>[^<]\+' | sed 's/ selected>//g')
+    [defgw]=$(echo $body | grep -o 'name="defgw"[^>]\+value="[^"]*' | grep -o 'value="[^"]*' | sed 's/value="//g')
+    [dns0]=$(echo $body | grep -o 'name="dns0"[^>]\+value="[^"]*' | grep -o 'value="[^"]*' | sed 's/value="//g')
+    [dns1]=$(echo $body | grep -o 'name="dns1"[^>]\+value="[^"]*' | grep -o 'value="[^"]*' | sed 's/value="//g')
+    [defmac_use]=$(echo $body | grep -o 'value="[0-9]\+" name="defmac_use" [^>]\+checked' | grep -o '[0-9]\+')
+    [mtu]=$(echo $body | grep -o 'name="mtu"[^>]\+value="[^"]*' | grep -o 'value="[^"]*' | sed 's/value="//g')
+)
 
 case "$2" in
     submit)
         eval $(cat -)
         curl -s -X POST \
-            --data-urlencode "method=$wan_method" \
-            --data-urlencode "gwaddr_4over6=$wan_gwaddr_4over6" \
-            --data-urlencode "ipaddr=$wan_ipaddr" \
-            --data-urlencode "netmask=$wan_netmask" \
-            --data-urlencode "defgw=$wan_defgw" \
-            --data-urlencode "dns0=$wan_dns0" \
-            --data-urlencode "dns1=$wan_dns1" \
-            --data-urlencode "defmac_use=$wan_defmac_use" \
-            --data-urlencode "mtu=$wan_mtu" \
-            --data "sWebSessionnum=$session_num" \
-            --data "sWebSessionid=$session_id" \
+            --data-urlencode "method=${config_wan[method]}" \
+            --data-urlencode "gwaddr_4over6=${config_wan[gwaddr_4over6]}" \
+            --data-urlencode "ipaddr=${config_wan[ipaddr]}" \
+            --data-urlencode "netmask=${config_wan[netmask]}" \
+            --data-urlencode "defgw=${config_wan[defgw]}" \
+            --data-urlencode "dns0=${config_wan[dns0]}" \
+            --data-urlencode "dns1=${config_wan[dns1]}" \
+            --data-urlencode "defmac_use=${config_wan[defmac_use]}" \
+            --data-urlencode "mtu=${config_wan[mtu]}" \
+            --data-urlencode "sWebSessionnum=$session_num" \
+            --data-urlencode "sWebSessionid=$session_id" \
             $url_form | iconv -f $charset_from -t $charset_to >&2
         ;;
     method)
-        echo $wan_method
-        echo $wan_gwaddr_4over6
-        echo $wan_ipaddr
-        echo $wan_netmask
+        echo ${config_wan[method]}
+        echo ${config_wan[gwaddr_4over6]}
+        echo ${config_wan[ipaddr]}
+        echo ${config_wan[netmask]}
         ;;
     defgw)
-        echo $wan_defgw
+        echo ${config_wan[defgw]}
         ;;
     dns)
-        echo $wan_dns0
-        echo $wan_dns1
+        echo ${config_wan[dns0]}
+        echo ${config_wan[dns1]}
         ;;
     wan)
-        echo $wan_defmac_use
-        echo $wan_mtu
+        echo ${config_wan[defmac_use]}
+        echo ${config_wan[mtu]}
         ;;
     *)
-        echo $wan_method
-        echo $wan_gwaddr_4over6
-        echo $wan_ipaddr
-        echo $wan_netmask
-        echo $wan_defgw
-        echo $wan_dns0
-        echo $wan_dns1
-        echo $wan_defmac_use
-        echo $wan_mtu
+        echo ${config_wan[method]}
+        echo ${config_wan[gwaddr_4over6]}
+        echo ${config_wan[ipaddr]}
+        echo ${config_wan[netmask]}
+        echo ${config_wan[defgw]}
+        echo ${config_wan[dns0]}
+        echo ${config_wan[dns1]}
+        echo ${config_wan[defmac_use]}
+        echo ${config_wan[mtu]}
         ;;
 esac
