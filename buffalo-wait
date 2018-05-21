@@ -1,0 +1,6 @@
+#!/bin/bash
+
+url=$(echo $1 | sed 's/\/$//')
+url_busy="$url/cgi-bin/cgi?req=fnc&fnc=\$\{get_busy_status\}"
+
+curl -s -X GET $url_busy
