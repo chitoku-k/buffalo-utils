@@ -3,4 +3,6 @@
 url=$(echo $1 | sed 's/\/$//')
 url_busy="$url/cgi-bin/cgi?req=fnc&fnc=\$\{get_busy_status\}"
 
+[ -z "$url" ] && echo 'No URL is specified.' >&2 && exit 1
+
 curl -s -X GET $url_busy

@@ -4,12 +4,16 @@ url=$(echo $1 | sed 's/\/$//')
 url_log="$url/cgi-bin/cgi?req=frm&frm=log_disp.html"
 url_form="$url/cgi-bin/cgi?req=inp&res=log_disp.html"
 
+[ -z "$url" ] && echo 'No URL is specified.' >&2 && exit 1
+
 charset_from='euc-jp'
 charset_to='utf-8'
 
 body=$(curl -s $url_log | iconv -f $charset_from -t $charset_to | tr -d '\n')
 session_num=$(echo $body | grep -o 'sWebSessionnum value=[0-9]\+' | grep -o '[0-9]\+' | head -1)
 session_id=$(echo $body | grep -o 'sWebSessionid value=[0-9-]\+' | grep -o '[0-9-]\+' | head -1)
+
+([ -z "$session_num" ] || [ -z "$session_id" ]) && echo 'Log in failed.' >&2 && exit 2
 
 curl -s -X POST \
     --data-urlencode "SAVE=1" \

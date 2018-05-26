@@ -3,6 +3,8 @@
 url=$(echo $1 | sed 's/\/$//')
 url_logout="$url/cgi-bin/cgi?req=twz&frm=logout.html"
 
+[ -z "$url" ] && echo 'No URL is specified.' >&2 && exit 1
+
 charset_from='euc-jp'
 charset_to='utf-8'
 
