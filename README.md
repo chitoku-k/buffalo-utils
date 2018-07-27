@@ -42,7 +42,7 @@ Logs in. Requires encrypted data that `buffalo-setup` generates.
 Call `buffalo-login` with the hostname and a filename for new cookie jar.
 
 ```sh
-$ ./buffalo-login '192.0.2.1' 'cookies'
+$ cat 'encrypted' | ./buffalo-login '192.0.2.1' 'cookies'
 ```
 
 ### buffalo-logout
