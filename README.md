@@ -71,18 +71,18 @@ hostname, the filename of the cookie jar, and the category of the settings. The
 category can be any of following: method, defgw, dns, or wan
 
 - method
-  - Method for obtaining IP address
-  - Gateway Address for IPv4 over IPv6
-  - Manual IP Address
-  - Manual Subnet Mask
+  - method: Method for obtaining IP address
+  - gwaddr_4over6: Gateway Address for IPv4 over IPv6
+  - ipaddr: Manual IP Address
+  - netmask: Manual Subnet Mask
 - defgw
-  - Default Gateway
+  - defgw: Default Gateway
 - dns
-  - Primary DNS
-  - Secondary DNS
+  - dns0: Primary DNS
+  - dns1: Secondary DNS
 - wan
-  - MAC address
-  - MTU
+  - defmac_use: MAC address
+  - mtu: MTU
 
 ```sh
 $ ./buffalo-advanced '192.0.2.1' 'cookies' 'dns'
