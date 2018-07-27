@@ -2,11 +2,14 @@
 
 url=$(echo $1 | sed 's/\/$//')
 url_fnc="$url/cgi-bin/cgi?req=fnc&fnc=\$\{get_json_param(ICON)\}"
+cookies=$2
 
 [ -z "$url" ] && echo 'No URL is specified.' >&2 && exit 1
+[ ! -f "$cookies" ] && echo 'No cookies found.' >&2 && exit 2
 
 charset_from='euc-jp'
 charset_to='utf-8'
 
 curl -s -X GET \
+    --cookie $cookies \
     $url_fnc | iconv -f $charset_from -t $charset_to

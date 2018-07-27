@@ -2,7 +2,11 @@
 
 url=$(echo $1 | sed 's/\/$//')
 url_busy="$url/cgi-bin/cgi?req=fnc&fnc=\$\{get_busy_status\}"
+cookies=$2
 
 [ -z "$url" ] && echo 'No URL is specified.' >&2 && exit 1
+[ ! -f "$cookies" ] && echo 'No cookies found.' >&2 && exit 2
 
-curl -s -X GET $url_busy
+curl -s -X GET \
+    --cookie $cookies \
+    $url_busy

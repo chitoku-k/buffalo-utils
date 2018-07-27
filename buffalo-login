@@ -3,8 +3,10 @@
 url=$(echo $1 | sed 's/\/$//')
 url_top="$url/cgi-bin/cgi?req=twz"
 url_login="$url/cgi-bin/cgi?req=inp&res=login.html"
+cookies=$2
 
 [ -z "$url" ] && echo 'No URL is specified.' >&2 && exit 1
+[ -z "$cookies" ] && echo 'No cookie-jar path is specified.' >&2 && exit 2
 
 encrypted=$(cat -)
 uname='admin'
@@ -18,6 +20,7 @@ session_id=$(echo $body | grep -o 'sWebSessionid value=[0-9-]\+' | grep -o '[0-9
 ([ -z "$session_num" ] || [ -z "$session_id" ]) && echo 'Log in failed.' >&2 && exit 2
 
 curl -s -X POST \
+    --cookie-jar $cookies \
     --data-urlencode "airstation_uname=$uname" \
     --data-urlencode "encrypted=$encrypted" \
     --data-urlencode "sWebSessionnum=$session_num" \
