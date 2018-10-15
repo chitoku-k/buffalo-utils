@@ -30,7 +30,7 @@ Call `buffalo-setup` with the hostname and pass password from the standard
 input.
 
 ```sh
-$ cat 'your-secret-password' | ./buffalo-setup '192.0.2.1' > encrypted
+$ echo 'your-secret-password' | ./buffalo-setup '192.0.2.1' > encrypted
 ```
 
 ## Core Components
@@ -94,7 +94,7 @@ eval's the standard input, expecting the usage below. Pass `config_wan[*]=*` so
 script can parse as a bash expression.
 
 ```sh
-$ cat 'config_wan[mtu]=1280' | ./buffalo-advanced '192.0.2.1' 'cookies' 'submit'
+$ echo 'config_wan[mtu]=1280' | ./buffalo-advanced '192.0.2.1' 'cookies' 'submit'
 ```
 
 ### buffalo-log
