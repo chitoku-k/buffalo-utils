@@ -1,0 +1,22 @@
+#!/bin/bash
+
+url=$(echo $1 | sed 's/\/$//')
+url_login="$url/login.html"
+
+[ -z "$url" ] && echo 'No URL is specified.' >&2 && exit 1
+
+password=$(cat -)
+username='admin'
+charset_from='cp932'
+charset_to='utf-8'
+
+body=$(curl -s $url_login | iconv -f $charset_from -t $charset_to)
+session_num=$(echo $body | grep -o 'name="nosave_session_num" value="[0-9]\+' | grep -o '[0-9]\+')
+
+[ -z "$session_num" ] && echo 'Log in failed.' >&2 && exit 2
+
+curl -s -X POST \
+    --data-urlencode "nosave_Username=$username" \
+    --data-urlencode "nosave_Password=$password" \
+    --data-urlencode "nosave_session_num=$session_num" \
+    $url_login | iconv -f $charset_from -t $charset_to >&2
