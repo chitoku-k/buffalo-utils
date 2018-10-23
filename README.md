@@ -3,6 +3,9 @@ buffalo-utils
 
 Shell utilities for managing your Buffalo AirStation
 
+This version is designed for AirStation series: WXR-1750DHP2, WXR-1751DHP2.
+For those who have a different AirStation, refer to [https://github.com/chitoku-k/buffalo-utils/tree/plain-sjis](https://github.com/chitoku-k/buffalo-utils/tree/plain-sjis).
+
 ## How to Use
 
 The utilities are divided into two parts: authenticator and core components.
